@@ -1,6 +1,8 @@
 ﻿using API.Data;
+using API.Dto;
 using API.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,15 +21,16 @@ namespace API.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult<AppUser>> Login(string userName, string Password)
+        public async Task<ActionResult<AppUser>> Register(RegisterDto registerDto)
         {
-            using var hmac  = new HMACSHA1();
+            if (await UserNameExists(registerDto.userName)) return BadRequest("Username already exists.");
+            using var hmac  = new HMACSHA512();
 
             var user = new AppUser()
             {
-                UserName = userName,
-                Password = hmac.ComputeHash(Encoding.UTF8.GetBytes(Password)),
-                PasswordHash = hmac.Key
+                UserName = registerDto.userName.ToLower(),
+                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.password)),
+                PasswordSalt = hmac.Key
             };
 
             _dataContext.Users.Add(user);
@@ -36,5 +39,31 @@ namespace API.Controllers
 
             return user;
         }
+
+        [HttpPost("Login")]
+        public async Task<ActionResult<AppUser>> Login(LoginDto loginDto)
+        {
+            var user = await _dataContext.Users.Where(s => s.UserName == loginDto.userName.ToLower()).FirstOrDefaultAsync();
+
+            if (user == null) return Unauthorized("Not authorized");
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+
+            var computerHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.password));
+
+            for (int i = 0; i < computerHash.Length; i++)
+            {
+                if (computerHash[i] != user.PasswordHash[i]) return Unauthorized("Wrong creds."); 
+            }
+
+            return user;
+        }
+
+
+        #region
+        private async Task<bool> UserNameExists(string userName)
+        {
+            return await _dataContext.Users.AnyAsync(s => s.UserName == userName.ToLower());
+        }
+        #endregion
     }
 }
