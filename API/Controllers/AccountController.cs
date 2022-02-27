@@ -15,13 +15,15 @@ namespace API.Controllers
     public class AccountController : BaseController
     {
         private readonly DataContext _dataContext;
-        public AccountController(DataContext dataContext)
+        private readonly ITokenService _tokenService;
+        public AccountController(DataContext dataContext, ITokenService tokenService)
         {
             _dataContext = dataContext;
+            _tokenService = tokenService;
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult<AppUser>> Register(RegisterDto registerDto)
+        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
             if (await UserNameExists(registerDto.userName)) return BadRequest("Username already exists.");
             using var hmac  = new HMACSHA512();
@@ -37,11 +39,11 @@ namespace API.Controllers
 
             await _dataContext.SaveChangesAsync();
 
-            return user;
+            return new UserDto { userName = user.UserName, token = _tokenService.CreateToken(user)};
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult<AppUser>> Login(LoginDto loginDto)
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             var user = await _dataContext.Users.Where(s => s.UserName == loginDto.userName.ToLower()).FirstOrDefaultAsync();
 
@@ -55,7 +57,7 @@ namespace API.Controllers
                 if (computerHash[i] != user.PasswordHash[i]) return Unauthorized("Wrong creds."); 
             }
 
-            return user;
+            return new UserDto { userName = user.UserName, token = _tokenService.CreateToken(user) };
         }
 
 
