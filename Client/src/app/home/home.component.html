@@ -1,0 +1,17 @@
+<div class="container mt-5">
+    <div style="text-align: center;" *ngIf="!registerMode">
+        <h1>Find your Item(s)</h1>
+        <p class="lead">Sign up to view Item(s)</p>
+        <div class="text-center">
+            <button class="btn btn-primary btn-lg mr-2" (click)="registerToggle()">Register</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-center" *ngIf="registerMode">
+            <div class="col-4">
+                <app-register [usersFromHomeComponent]="users" (cancelFunction)="cancelFunctionality(event)"></app-register>
+            </div>
+        </div>
+    </div>
+</div>
