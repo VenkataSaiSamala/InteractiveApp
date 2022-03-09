@@ -9,14 +9,22 @@ import { NavComponent } from './nav/nav.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
-
+import { ListsComponent } from './lists/lists.component';
+import { MemberListComponent } from './members/member-list/member-list.component';
+import { MemberDetailsComponent } from './members/member-details/member-details.component';
+import { MessagesComponent } from './messages/messages.component';
+import {ToastrModule} from 'ngx-toastr';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     HomeComponent,
-    RegisterComponent
+    RegisterComponent,
+    ListsComponent,
+    MemberListComponent,
+    MemberDetailsComponent,
+    MessagesComponent
   ],
   imports: [
     BrowserModule,
@@ -24,7 +32,10 @@ import { RegisterComponent } from './register/register.component';
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
-    BsDropdownModule.forRoot()
+    BsDropdownModule.forRoot(),
+    ToastrModule.forRoot({    timeOut: 10000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,})
   ],
   providers: [],
   bootstrap: [AppComponent]

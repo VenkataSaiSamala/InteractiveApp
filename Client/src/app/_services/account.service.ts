@@ -18,8 +18,6 @@ export class AccountService {
     return this.http.post(this.baseurl + 'account/login', model).pipe(
       map((response: User) => {
           const user = response;
-          alert(response);
-          console.log(response)
           if(user){
 
             console.log(user);
@@ -27,7 +25,7 @@ export class AccountService {
             this.currentUserSource.next(user);
           }
       })
-    ).subscribe();
+    );
   }
 
   setCurrentUser(user: User){
@@ -50,6 +48,6 @@ export class AccountService {
             this.currentUserSource.next(user);
           }
       })
-    ).subscribe();
+    );
   }
 }
