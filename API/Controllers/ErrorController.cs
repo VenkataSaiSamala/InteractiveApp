@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    public class ErrorController : BaseController
+    public class ErrorController : BaseApiController
     {
         private readonly DataContext _dataContext;
         public ErrorController(DataContext dataContext) {

@@ -1,6 +1,7 @@
 ﻿using API.Data;
 using API.Dto;
 using API.Entities;
+using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,14 +13,16 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    public class AccountController : BaseController
+    public class AccountController : BaseApiController
     {
         private readonly DataContext _dataContext;
         private readonly ITokenService _tokenService;
-        public AccountController(DataContext dataContext, ITokenService tokenService)
+        private readonly IUserRepository _userRepository;
+        public AccountController(DataContext dataContext, ITokenService tokenService, IUserRepository userRepository)
         {
             _dataContext = dataContext;
             _tokenService = tokenService;
+            _userRepository = userRepository;
         }
 
         [HttpPost("Register")]

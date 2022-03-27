@@ -15,5 +15,10 @@ namespace API.Data
         }
 
         public DbSet<AppUser> Users { get; set; }
+
+        internal object FindAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
