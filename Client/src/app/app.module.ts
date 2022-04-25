@@ -16,6 +16,7 @@ import { MessagesComponent } from './messages/messages.component';
 import {ToastrModule} from 'ngx-toastr';
 import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { NotFoundComponent } from './error/not-found/not-found.component';
+import { MemberCardComponent } from './members/member-card/member-card.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { NotFoundComponent } from './error/not-found/not-found.component';
     MemberListComponent,
     MemberDetailsComponent,
     MessagesComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    MemberCardComponent
   ],
   imports: [
     BrowserModule,
